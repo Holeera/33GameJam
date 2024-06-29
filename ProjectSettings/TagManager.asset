@@ -6,6 +6,9 @@ TagManager:
   tags:
   - range
   - bullet
+  - gbullet
+  - sbullet
+  - supply
   layers:
   - Default
   - TransparentFX

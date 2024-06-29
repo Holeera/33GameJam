@@ -121,7 +121,7 @@ public class EnemyMovement : MonoBehaviour
     {
         health -= damage;
 
-        if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
+        if (health <= 0) Invoke(nameof(DestroyEnemy), 0f);
     }
     private void DestroyEnemy()
     {
@@ -133,6 +133,25 @@ public class EnemyMovement : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         Destroy(temp);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "gbullet")
+        {
+            TakeDamage(5);
+        }
+        if (other.gameObject.tag == "sbullet")
+        {
+
+            GetComponent<NavMeshAgent>().speed = 1f;
+            Invoke(nameof(StopSlow), 1.2f);
+        }
+    }
+
+    private void StopSlow()
+    {
+        GetComponent<NavMeshAgent>().speed = 3.5f;
     }
 
     private void OnDrawGizmosSelected()

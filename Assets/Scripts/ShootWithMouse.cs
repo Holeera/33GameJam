@@ -9,9 +9,10 @@ public class ShootWithMouse : MonoBehaviour
     private bool isShooting = false;
     [SerializeField] Camera mainCam;
     Vector3 mousePos;
+    
     private void Start()
     {
-       
+
     }
 
     public void Update()
@@ -24,7 +25,7 @@ public class ShootWithMouse : MonoBehaviour
         {
             StartCoroutine(ShootNet());
         }
-        if (Input.GetKeyDown(KeyCode.E) && !isShooting)
+        if (Input.GetKeyDown(KeyCode.E) && !isShooting && ScriptInfrastructure.Instance.bigNetCounter > 0)
         {
             StartCoroutine(ShootNetBig());
         }
@@ -69,6 +70,7 @@ public class ShootWithMouse : MonoBehaviour
 
     private IEnumerator ShootNetBig()
     {
+        ScriptInfrastructure.Instance.bigNetCounter--;
         isShooting = true;
         GameObject temp = Instantiate(ScriptInfrastructure.Instance.netBig, ScriptInfrastructure.Instance.player.transform.position, ScriptInfrastructure.Instance.player.transform.rotation);
         if (ScriptInfrastructure.Instance.playerMove.movement.normalized != new Vector3(0, 0, 0))

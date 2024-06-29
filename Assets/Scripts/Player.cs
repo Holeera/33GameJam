@@ -8,9 +8,13 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "bullet")
+        if (other.gameObject.tag == "bullet")
         {
             TakeDamage(5);
+        }
+        if (other.gameObject.tag == "supply")
+        {
+            ScriptInfrastructure.Instance.bigNetCounter = 5;
         }
     }
     public void TakeDamage(int damage)

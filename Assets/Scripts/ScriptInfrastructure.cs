@@ -11,6 +11,11 @@ public class ScriptInfrastructure : MonoBehaviour
     public GameObject net;
     public GameObject netBig;
 
+    public GameObject meleeEnemy;
+    public GameObject rangeEnemy;
+
+    public int bigNetCounter = 5;
+
     public PlayerMove playerMove;
 
     private void Awake()
