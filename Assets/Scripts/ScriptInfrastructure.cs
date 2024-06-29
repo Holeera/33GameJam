@@ -7,6 +7,7 @@ public class ScriptInfrastructure : MonoBehaviour
     public static ScriptInfrastructure Instance;
 
     public GameObject player;
+    public GameObject gun;
     public GameObject bullet;
     public GameObject net;
     public GameObject netBig;
@@ -15,6 +16,7 @@ public class ScriptInfrastructure : MonoBehaviour
     public GameObject rangeEnemy;
 
     public int bigNetCounter = 5;
+    public int capturedEnemies = 0;
 
     public PlayerMove playerMove;
 

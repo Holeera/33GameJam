@@ -5,19 +5,6 @@ using UnityEngine.AI;
 
 public class EnemyMovement : MonoBehaviour
 {
-    /*public Transform target;
-    private NavMeshAgent agent;
-    void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        agent.destination = target.position;
-    }*/
-
     public NavMeshAgent agent;
 
     public Transform player;
@@ -29,6 +16,7 @@ public class EnemyMovement : MonoBehaviour
     //Patroling
     public Vector3 walkPoint;
     bool walkPointSet;
+    bool captured = false;
     public float walkPointRange;
 
     //Attacking
@@ -52,13 +40,15 @@ public class EnemyMovement : MonoBehaviour
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
-        if (!playerInSightRange && !playerInAttackRange) Patroling();
-        if (playerInSightRange && !playerInAttackRange) ChasePlayer();
-        if (playerInAttackRange && playerInSightRange) AttackPlayer();
+        if (captured) agent.speed = 0;
+        if (!playerInSightRange && !playerInAttackRange && !captured) Patroling();
+        if (playerInSightRange && !playerInAttackRange && !captured) ChasePlayer();
+        if (playerInAttackRange && playerInSightRange && !captured) AttackPlayer();
     }
 
     private void Patroling()
     {
+
         if (!walkPointSet) SearchWalkPoint();
 
         if (walkPointSet)
@@ -69,9 +59,11 @@ public class EnemyMovement : MonoBehaviour
         //Walkpoint reached
         if (distanceToWalkPoint.magnitude < 1f)
             walkPointSet = false;
+
     }
     private void SearchWalkPoint()
     {
+
         //Calculate random point in range
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
         float randomX = Random.Range(-walkPointRange, walkPointRange);
@@ -80,11 +72,14 @@ public class EnemyMovement : MonoBehaviour
 
         if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
             walkPointSet = true;
+
     }
 
     private void ChasePlayer()
     {
+
         agent.SetDestination(player.position);
+
     }
 
     private void AttackPlayer()
@@ -94,7 +89,7 @@ public class EnemyMovement : MonoBehaviour
 
         transform.LookAt(player);
 
-        if (!alreadyAttacked && this.tag == "range")
+        if (!alreadyAttacked && this.tag == "range" && !captured)
         {
             ///Attack code here
             Rigidbody rb = Instantiate(projectile, transform.position, Quaternion.identity).GetComponent<Rigidbody>();
@@ -102,14 +97,14 @@ public class EnemyMovement : MonoBehaviour
             rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
-            StartCoroutine(Kill(rb.gameObject));
+
         }
-        else if (!alreadyAttacked && this.tag != "range")
+        else if (!alreadyAttacked && this.tag != "range" && !captured)
         {
             Rigidbody rb = Instantiate(projectile, ScriptInfrastructure.Instance.player.transform.position, this.transform.rotation, ScriptInfrastructure.Instance.player.transform).GetComponent<Rigidbody>();
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
-            StartCoroutine(Kill(rb.gameObject));
+
         }
     }
     private void ResetAttack()
@@ -121,31 +116,38 @@ public class EnemyMovement : MonoBehaviour
     {
         health -= damage;
 
-        if (health <= 0) Invoke(nameof(DestroyEnemy), 0f);
+        if (health <= 0) Invoke(nameof(DestroyEnemy), 0.2f);
     }
     private void DestroyEnemy()
     {
         Destroy(gameObject);
     }
 
-    public IEnumerator Kill(GameObject temp)
+    private void CaptureEnemy()
     {
-        yield return new WaitForSeconds(0.5f);
-
-        Destroy(temp);
+        ScriptInfrastructure.Instance.capturedEnemies++;
+        Destroy(gameObject);
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "gbullet")
         {
-            TakeDamage(5);
+            TakeDamage(1);
         }
         if (other.gameObject.tag == "sbullet")
         {
-
-            GetComponent<NavMeshAgent>().speed = 1f;
-            Invoke(nameof(StopSlow), 1.2f);
+            if (health <= 2)
+            {
+                captured = true;
+                Invoke(nameof(CaptureEnemy), 2f);
+            }
+            else
+            {
+                GetComponent<NavMeshAgent>().speed = 1f;
+                Invoke(nameof(StopSlow), 1.2f);
+            }
         }
     }
 

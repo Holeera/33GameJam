@@ -9,6 +9,7 @@ TagManager:
   - gbullet
   - sbullet
   - supply
+  - NPC
   layers:
   - Default
   - TransparentFX

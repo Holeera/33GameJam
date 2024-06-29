@@ -7,9 +7,8 @@ using UnityEngine;
 public class ShootWithMouse : MonoBehaviour
 {
     private bool isShooting = false;
-    [SerializeField] Camera mainCam;
     Vector3 mousePos;
-    
+
     private void Start()
     {
 
@@ -35,16 +34,8 @@ public class ShootWithMouse : MonoBehaviour
     public IEnumerator Shoot()
     {
         isShooting = true;
-        GameObject temp = Instantiate(ScriptInfrastructure.Instance.bullet, ScriptInfrastructure.Instance.player.transform.position, ScriptInfrastructure.Instance.player.transform.rotation);
-        if (ScriptInfrastructure.Instance.playerMove.movement.normalized != new Vector3(0, 0, 0))
-        {
-            temp.GetComponent<Rigidbody>().AddForce(ScriptInfrastructure.Instance.playerMove.movement.normalized * 1000);
-
-        }
-        else
-        {
-            temp.GetComponent<Rigidbody>().AddForce(ScriptInfrastructure.Instance.playerMove.movement.normalized + new Vector3(0, 0, 1f) * 1000);
-        }
+        GameObject temp = Instantiate(ScriptInfrastructure.Instance.bullet, ScriptInfrastructure.Instance.gun.transform.position, ScriptInfrastructure.Instance.gun.transform.rotation);
+        temp.GetComponent<Rigidbody>().AddForce(ScriptInfrastructure.Instance.player.transform.forward * 1000);
         StartCoroutine(Kill(temp));
         yield return new WaitForSeconds(0.5f);
         isShooting = false;
@@ -53,16 +44,8 @@ public class ShootWithMouse : MonoBehaviour
     public IEnumerator ShootNet()
     {
         isShooting = true;
-        GameObject temp = Instantiate(ScriptInfrastructure.Instance.net, ScriptInfrastructure.Instance.player.transform.position, ScriptInfrastructure.Instance.player.transform.rotation);
-        if (ScriptInfrastructure.Instance.playerMove.movement.normalized != new Vector3(0, 0, 0))
-        {
-            temp.GetComponent<Rigidbody>().AddForce(ScriptInfrastructure.Instance.playerMove.movement.normalized * 1000);
-
-        }
-        else
-        {
-            temp.GetComponent<Rigidbody>().AddForce(ScriptInfrastructure.Instance.playerMove.movement.normalized + new Vector3(0, 0, 1f) * 1000);
-        }
+        GameObject temp = Instantiate(ScriptInfrastructure.Instance.net, ScriptInfrastructure.Instance.gun.transform.position, ScriptInfrastructure.Instance.gun.transform.rotation);
+        temp.GetComponent<Rigidbody>().AddForce(ScriptInfrastructure.Instance.player.transform.forward * 1000);
         StartCoroutine(Kill(temp));
         yield return new WaitForSeconds(0.5f);
         isShooting = false;
@@ -72,16 +55,8 @@ public class ShootWithMouse : MonoBehaviour
     {
         ScriptInfrastructure.Instance.bigNetCounter--;
         isShooting = true;
-        GameObject temp = Instantiate(ScriptInfrastructure.Instance.netBig, ScriptInfrastructure.Instance.player.transform.position, ScriptInfrastructure.Instance.player.transform.rotation);
-        if (ScriptInfrastructure.Instance.playerMove.movement.normalized != new Vector3(0, 0, 0))
-        {
-            temp.GetComponent<Rigidbody>().AddForce(ScriptInfrastructure.Instance.playerMove.movement.normalized * 1000);
-
-        }
-        else
-        {
-            temp.GetComponent<Rigidbody>().AddForce(ScriptInfrastructure.Instance.playerMove.movement.normalized + new Vector3(0, 0, 1f) * 1000);
-        }
+        GameObject temp = Instantiate(ScriptInfrastructure.Instance.netBig, ScriptInfrastructure.Instance.gun.transform.position, ScriptInfrastructure.Instance.gun.transform.rotation);
+        temp.GetComponent<Rigidbody>().AddForce(ScriptInfrastructure.Instance.player.transform.forward * 1000);
         StartCoroutine(Kill(temp));
         yield return new WaitForSeconds(0.5f);
         isShooting = false;
